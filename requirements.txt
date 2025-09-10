@@ -10,3 +10,4 @@ requests
 pytest
 pytest-asyncio 
 httpx
+langsmith
