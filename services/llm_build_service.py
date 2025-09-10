@@ -5,6 +5,7 @@ from langgraph.graph import StateGraph, END
 from langchain_core.tools import StructuredTool
 from langchain_core.messages import SystemMessage, AIMessage
 from langchain_core.messages import BaseMessage
+from langchain_core.tracers import ConsoleCallbackHandler
 
 from prompts.system_prompts import alarm_security_system_message
 from system_setup.env_setup import set_env
@@ -20,7 +21,7 @@ set_env()
 
 # ---- Bind Tools to LLM ----
 tools = [arm_system, disarm_system, add_user, remove_user, list_user, door_operations]
-llm = ChatOpenAI(model="gpt-4o").bind_tools(tools)
+llm = ChatOpenAI(model="gpt-4o", callbacks=[ConsoleCallbackHandler()]).bind_tools(tools)
 
 # ---- Router Node ----
 def router(state: AgentState):
