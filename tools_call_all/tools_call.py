@@ -6,7 +6,7 @@ import requests
 
 # ------------------ Memory ------------------
 system_enabled = False
-
+local_base_url = "http://localhost:8000/"
 
 # ------------------ Tool functions ------------------
 
@@ -19,7 +19,7 @@ def arm_system(username: str) -> str:
     """
     try:
         response = requests.post(
-            "http://localhost:8000/api/arm_ayatem",
+            f"{local_base_url}api/arm_ayatem",
             json={
                 "username": username,
                 "mode": '"away" | "home" | "stay"'
@@ -38,7 +38,7 @@ def disarm_system(username: str) -> str:
     """
     try:
         response = requests.post(
-            "http://localhost:8000/api/disarm_system",
+            f"{local_base_url}api/disarm_system",
             json={
                 "username": username
             }
@@ -65,7 +65,7 @@ def add_user(username: str, password: str, expire_from: str, expire_to: str) -> 
 
     try:
         response = requests.post(
-            "http://localhost:8000/api/add_user",  # same server
+            f"{local_base_url}api/add_user",  # same server
             json={
                 "username": username,
                 "password": password,
@@ -92,7 +92,7 @@ def remove_user(username: str) -> str:
 
     try:
         response = requests.post(
-            "http://localhost:8000/api/remove_user",  # same server
+            f"{local_base_url}api/remove_user",  # same server
             json={
                 "username": username
             }
@@ -108,7 +108,7 @@ def list_user() -> str:
     """
     try:
         response = requests.get(
-            "http://localhost:8000/api/list_users",  # same server
+            f"{local_base_url}api/list_users",  # same server
         )
         response.raise_for_status()
         return response.json().get("status", "All the valid users")
@@ -120,7 +120,7 @@ def door_operations(username: str, password: str, try_count: int) -> str:
     """Open door operations."""
     try:
         response = requests.post(
-            "http://localhost:8000/api/door_operation",
+            f"{local_base_url}api/door_operation",
             json={
                 "username": username,
                 "password": password,
