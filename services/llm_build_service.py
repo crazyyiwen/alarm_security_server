@@ -1,11 +1,13 @@
+import os
 from typing import List, TypedDict
 from langchain_openai import ChatOpenAI
 from langgraph.graph import StateGraph, END
 from langchain_core.tools import StructuredTool
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
+from langchain_core.messages import SystemMessage, AIMessage
 from langchain_core.messages import BaseMessage
 
 from prompts.system_prompts import alarm_security_system_message
+from system_setup.env_setup import set_env
 from tools_call_all.tools_call import add_user, arm_system, disarm_system, door_operations, list_user, remove_user
 
 # ------- Enable memory ---------------
@@ -13,6 +15,8 @@ class AgentState(TypedDict):
     messages: List[BaseMessage]
     result: str  
 
+
+set_env()
 
 # ---- Bind Tools to LLM ----
 tools = [arm_system, disarm_system, add_user, remove_user, list_user, door_operations]

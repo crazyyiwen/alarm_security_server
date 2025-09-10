@@ -89,7 +89,7 @@ def door_operation_api(request: DoorOperationRequest):
         return {"status": "Invalid user"}
     
 #---- Query API for client side ----
-@api_router.post("/query")
+@api_router.post("/chat")
 def query_agent(request: QueryRequest):
     try:
         session_id = getattr(request, "session_id", "default")

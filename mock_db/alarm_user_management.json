@@ -9,16 +9,6 @@
             "disarm"
         ]
     },
-    "vettel": {
-        "name": "vettel",
-        "password": "0909",
-        "start_time": "2023-11-29T00:00:00",
-        "end_time": "2023-12-06T00:00:00",
-        "permissions": [
-            "arm",
-            "disarm"
-        ]
-    },
     "susan": {
         "name": "susan",
         "password": "4567",

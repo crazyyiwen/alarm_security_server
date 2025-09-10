@@ -1,5 +1,7 @@
 import os
+
 from dotenv import load_dotenv
+
 
 def set_env():
     """Load OPENAI_API_KEY from .env and environment."""
