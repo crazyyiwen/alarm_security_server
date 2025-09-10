@@ -9,7 +9,7 @@ from langchain_core.tracers import ConsoleCallbackHandler
 
 from prompts.system_prompts import alarm_security_system_message
 from system_setup.env_setup import set_env
-from tools_call_all.tools_call import add_user, arm_system, disarm_system, door_operations, list_user, remove_user
+from tools_call_all.tools_call import add_user, arm_system, default_tool, disarm_system, door_operations, list_user, remove_user
 
 # ------- Enable memory ---------------
 class AgentState(TypedDict):
@@ -20,7 +20,7 @@ class AgentState(TypedDict):
 set_env()
 
 # ---- Bind Tools to LLM ----
-tools = [arm_system, disarm_system, add_user, remove_user, list_user, door_operations]
+tools = [arm_system, disarm_system, add_user, remove_user, list_user, door_operations, default_tool]
 llm = ChatOpenAI(model="gpt-4o", callbacks=[ConsoleCallbackHandler()]).bind_tools(tools)
 
 # ---- Router Node ----

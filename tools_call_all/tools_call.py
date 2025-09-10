@@ -133,6 +133,17 @@ def door_operations(username: str, password: str, try_count: int) -> str:
         return response.json().get("status", "System armed")
     except Exception as e:
         return f"Error calling arm_ayatem API: {e}"
+    
+@tool
+def default_tool(usermessage: str) -> str:
+    """Default tool.
+    Args:
+        usermessage: this message is used for return.
+    """
+    try:
+        return usermessage
+    except Exception as e:
+        return f"Error calling list_users_api: {e}"
 
 
 
