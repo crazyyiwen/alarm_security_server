@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException
 
 from langchain_core.messages import HumanMessage
 
-from models.request_models import AddUserRequest, DoorOperationRequest, QueryRequest, RemoveUserRequest
+from models.request_models import AddUserRequest, ArmRequest, DisarmRequest, DoorOperationRequest, QueryRequest, RemoveUserRequest
 from models.state_models import AgentState
 from services.crud_service import add_user_process, delete_user_process, load_all_users, user_exist_check
 from services.llm_build_service import app_graph
@@ -26,14 +26,14 @@ def health_check():
     
 #---- Arm system ----
 @api_router.post("/api/arm_ayatem")
-def enable_system_api(request: RemoveUserRequest):
+def enable_system_api(request: ArmRequest):
     if user_exist_check(request.username):
         return {"status": '"mode": "away" | "home" | "stay"'}
     else:
         return {"status": "Arm system failed, user is invalid"}
 #---- Disarm system ----
 @api_router.post("/api/disarm_system")
-def disable_system_api(request: RemoveUserRequest):
+def disable_system_api(request: DisarmRequest):
     if user_exist_check(request.username):
         return {"status": "System disarmed"}
     else:

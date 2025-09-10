@@ -18,3 +18,10 @@ class DoorOperationRequest(BaseModel):
     username: str
     password: str
     try_count: int
+
+class ArmRequest(BaseModel):
+    username: str
+    mode:str
+
+class DisarmRequest(BaseModel):
+    username: str

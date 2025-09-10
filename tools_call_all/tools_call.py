@@ -21,7 +21,8 @@ def arm_system(username: str) -> str:
         response = requests.post(
             "http://localhost:8000/api/arm_ayatem",
             json={
-                "username": username
+                "username": username,
+                "mode": '"away" | "home" | "stay"'
             }
         )
         response.raise_for_status()
