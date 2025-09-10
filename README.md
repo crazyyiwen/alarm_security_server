@@ -8,7 +8,7 @@
 
 ## Get started
 
-Quick start: [Docs](https://crazyyiwen2015.atlassian.net/wiki/x/vgAC):
+Quick start: [Docs](https://crazyyiwen2015.atlassian.net/wiki/x/vgAC){target=_blank}:
 
 Download and host Docker file - alarm-server:
 
@@ -19,5 +19,5 @@ docker run -d -p 8000:8000 --name alarm-server alarm-server
 
 Now you are hosting server side successfully, this is a server side light project using FastAPI(Python) + LangGraph + LangSmith(Trace).<br>
 
-Documentation: [Server side documentation](https://crazyyiwen2015.atlassian.net/wiki/x/i4AB):<br>
+Documentation: [Server side documentation](https://crazyyiwen2015.atlassian.net/wiki/x/i4AB){target=_blank}:<br>
 
