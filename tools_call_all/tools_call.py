@@ -87,6 +87,8 @@ def remove_user(username: str) -> str:
     try:
         if username == "":
             raise ValueError("Please provide valid username")
+        elif username == "admin":
+            return "You do not have access to remove admin user"
     except Exception as e:
         return f"Failed to parse input: {e}"
 

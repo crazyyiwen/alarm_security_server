@@ -9,19 +9,19 @@
             "disarm"
         ]
     },
-    "susan": {
-        "name": "susan",
-        "password": "4567",
-        "start_time": "2023-11-23T00:00:00",
-        "end_time": "2023-11-30T00:00:00",
+    "dbala": {
+        "name": "dbala",
+        "password": "5647",
+        "start_time": "2023-11-27T00:00:00",
+        "end_time": "2023-12-04T00:00:00",
         "permissions": [
             "arm",
             "disarm"
         ]
     },
-    "dbala": {
-        "name": "dbala",
-        "password": "5647",
+    "messi": {
+        "name": "messi",
+        "password": "6767",
         "start_time": "2023-11-27T00:00:00",
         "end_time": "2023-12-04T00:00:00",
         "permissions": [
