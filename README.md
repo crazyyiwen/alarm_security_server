@@ -8,6 +8,10 @@
 
 ## Get started
 
+Quick start:
+please refer this link:
+Then, create an agent [Quick start](https://crazyyiwen2015.atlassian.net/wiki/x/vgAC):
+
 Download and host Docker file - alarm-server:
 
 ```
