@@ -18,6 +18,6 @@ docker run -d -p 8000:8000 --name alarm-server alarm-server
 ```
 
 
-Documentation: [Server side documentation](https://crazyyiwen2015.atlassian.net/wiki/x/i4AB):
+Documentation: [Server side documentation](https://crazyyiwen2015.atlassian.net/wiki/x/i4AB):<br>
 Now you are hosting server side successfully, this is a server side light project using FastAPI(Python) + LangGraph + LangSmith(Trace).
 
