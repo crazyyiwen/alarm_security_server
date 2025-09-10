@@ -28,7 +28,7 @@ def health_check():
 @api_router.post("/api/arm_ayatem")
 def enable_system_api(request: ArmRequest):
     if user_exist_check(request.username):
-        return {"status": '"mode": "away" | "home" | "stay"'}
+        return {"status": "System Armed"}
     else:
         return {"status": "Arm system failed, user is invalid"}
 #---- Disarm system ----

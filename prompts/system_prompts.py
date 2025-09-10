@@ -8,7 +8,7 @@ alarm_security_system_message = """
     
     -if the user input is related to show or display all the users, please choose the list_user as the tool call, do not need to fetch any argument.
 
-    -if the user input is related to arm, enable or deploy the system, please choose the arm_system as the tool call, fetch the exact username as the tool call function argument.
+    -if the user input is related to arm the system, enable the system or deploy the system, please choose the arm_system as the tool call, fetch the exact username as the tool call function argument.
 
     -if the user input is related to disarm, disable or cancel the system, please choose the disarm_system as the tool call, fetch the exact username as the tool call function argument.
 
