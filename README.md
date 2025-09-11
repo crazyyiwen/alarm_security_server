@@ -79,7 +79,7 @@ It will be locked if password failed 3 times.<br>
 Case_8: Multiple users, one locked, another can open the door:<br>
 <img src="media/ex8.png" width="600"><br>
 Case_9: Open door before or after system armed:<br>
-1 before system armed, anyone can open the door<br>
+1 Before system armed, anyone can open the door<br>
 2 But once system armed, only valid user can open the door<br>
 <img src="media/ex9.png" width="600"><br>
 Case_10: Complex words parse:<br>
@@ -87,6 +87,21 @@ Case_10: Complex words parse:<br>
 <img src="media/ex11.png" width="600"><br>
 <img src="media/ex12.png" width="600"><br>
 
+### Memory Use
+1 For user message, I am using in-memory, which is convenient. However, in a production application, you would likely change this to use SqlSaver or PostgresSaver and connect a database.<br>
+LLM will check if system armed, username, password, expiration time range fetching.<br>
+LLM will check how many times password input failure, if multiple times failed, user will be locked.<br>
+```
+#partial code
+class AgentState(TypedDict):
+    messages: List[BaseMessage]
+    result: str  
+
+messages = [SystemMessage(content=alarm_security_system_message)] + state["messages"]
+```
+2 For user list, I am using json file as the mock of database,
+it’s for add user/delete user/show all users<br>
+<img src="media/ex14.png" width="600"><br>
 
 Now you are hosting server side successfully, this is a server side light project using FastAPI(Python) + LangGraph + LangSmith(Trace).<br>
 
