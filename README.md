@@ -57,5 +57,35 @@ docker run -d -p 8000:8000 --name alarm-server alarm-server
 1.  LLM will check if system armed, username, password, expiration time range fetching.
 1.  LLM will check how many times password input failure, if multiple times failed, user will be locked.
 
+### Examples
+Note: 
+For “Arm system“/”Disarm System”/”Door operation(open door)”, 
+please use cmd like “I am …, please…“, this is to mock the voice differentiate the Admin user or client user(LLM will parse the exact value from message).
+Case_1: Open the UI:<br>
+<img src="media/ex1.png" width="600">
+Case_2: Arm the system:<br>
+<img src="media/ex2.png" width="600">
+Case_3: Add user:<br>
+<img src="media/ex3.png" width="600">
+Case_4: Show all users:<br>
+<img src="media/ex4.png" width="600">
+Case_5: Remove user:<br>
+<img src="media/ex5.png" width="600">
+Case_6: Remove user - Admin user can not be removed:<br>
+<img src="media/ex6.png" width="600">
+Case_7: Open Door:<br>
+It will be locked if password failed 3 times.<br>
+<img src="media/ex7.png" width="600">
+Case_8: Multiple users, one locked, another can open the door:<br>
+<img src="media/ex8.png" width="600">
+Case_9: Open door before or after system armed:<br>
+1 before system armed, anyone can open the door<br>
+2 But once system armed, only valid user can open the door<br>
+<img src="media/ex9.png" width="600">
+Case_10: Complex words parse:<br>
+<img src="media/ex11.png" width="600">
+<img src="media/ex12.png" width="600">
+
+
 Now you are hosting server side successfully, this is a server side light project using FastAPI(Python) + LangGraph + LangSmith(Trace).<br>
 
