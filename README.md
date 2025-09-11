@@ -10,15 +10,20 @@
 
 ### Quick start:
 ```
+For quick start running the project locally, please execute below command:
+
 docker pull crazyyiwen/alarm-server:latest
 docker run -d -p 8000:8000 --name alarm-server crazyyiwen/alarm-server:latest
 
 docker pull crazyyiwen/alarm-chat-client:latest
 docker run -d -p 5173:80 --name alarm-chat-client crazyyiwen/alarm-chat-client:latest
+
 open http://localhost:5173/
 ```
 
 (Optional)Download and host Docker file - alarm-chat-client and alarm-server:<br>
+Client Repo [alarm_security_client](https://github.com/crazyyiwen/alarm_security_client)<br>
+Server Repo [alarm_server](https://github.com/crazyyiwen/alarm_security_server)<br>
 
 ```
 docker build -t alarm-chat-client .
