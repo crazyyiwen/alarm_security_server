@@ -116,7 +116,7 @@ it’s for add user/delete user/show all users<br>
 
     &nbsp;&nbsp;&nbsp;&nbsp;Takes the text as input, processes it, and generates a response<br>
 
-Example: GPT-4o, LLaMA-3, Claude, Mistral<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;Example: GPT-4o, LLaMA-3, Claude, Mistral<br>
 
 3. TTS (Text-to-Speech)<br>
 
