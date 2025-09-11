@@ -110,7 +110,7 @@ it’s for add user/delete user/show all users<br>
 ```
 pytest -v tests/main_tests.py
 ```
-<img src="media/ex15.png" width="600"><br>
+<img src="media/ex20.png" width="600"><br>
 
 ```
 Swagger Health Check
