@@ -8,6 +8,13 @@
 
 ## Get started
 
+### Tech Stacks:
+[LangChain](https://www.langchain.com/)<br>
+[LangGraph](https://www.langchain.com/langgraph)<br>
+[LangSmith](https://smith.langchain.com/)<br>
+[React](https://react.dev/)<br>
+[React](https://vite.dev/guide/)<br>
+
 ### Quick start:
 ```
 For quick start running the project locally, please execute below command:
@@ -147,5 +154,5 @@ Logging trace(LangSmith)
 
     &nbsp;&nbsp;&nbsp;&nbsp;Examples: Tacotron, FastSpeech, VALL-E, OpenAI TTS models<br>
 
-Now you are hosting server side successfully, this is a server side light project using FastAPI(Python) + LangGraph + LangSmith(Trace).<br>
+Now you are hosting server side successfully<br>
 
