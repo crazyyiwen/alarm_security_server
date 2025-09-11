@@ -8,16 +8,33 @@
 
 ## Get started
 
-Quick start: [Docs](https://crazyyiwen2015.atlassian.net/wiki/x/vgAC):
+Quick start:<br>
+```
+docker pull crazyyiwen/alarm-server:latest
+docker run -d -p 8000:8000 --name alarm-server crazyyiwen/alarm-server:latest
 
-Download and host Docker file - alarm-server:
+docker pull crazyyiwen/alarm-chat-client:latest
+docker run -d -p 5173:80 --name alarm-chat-client crazyyiwen/alarm-chat-client:latest
+open http://localhost:5173/
+```
+
+(Optional)Download and host Docker file - alarm-chat-client and alarm-server:<br>
 
 ```
+docker build -t alarm-chat-client .
+docker run -d -p 5173:80 --name alarm-chat-client alarm-chat-client
+
 docker build -t alarm-server .
 docker run -d -p 8000:8000 --name alarm-server alarm-server
 ```
 
-Now you are hosting server side successfully, this is a server side light project using FastAPI(Python) + LangGraph + LangSmith(Trace).<br>
+### Architecture Diagram
 
-Documentation: [Server side documentation](https://crazyyiwen2015.atlassian.net/wiki/x/i4AB):<br>
+<img src="media/Alarm_code_structure.png" width="600">
+
+### Code Structure
+
+<img src="media/Alarm_work_flow.png" width="600">
+
+Now you are hosting server side successfully, this is a server side light project using FastAPI(Python) + LangGraph + LangSmith(Trace).<br>
 
