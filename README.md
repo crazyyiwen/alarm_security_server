@@ -29,12 +29,12 @@ docker run -d -p 8000:8000 --name alarm-server alarm-server
 ```
 
 ### Architecture Diagram
+<img src="media/Alarm_work_flow.png" width="600">
 
-<img src="media/Alarm_code_structure.png" width="600">
 
 ### Code Structure
+<img src="media/Alarm_code_structure.png" width="600">
 
-<img src="media/Alarm_work_flow.png" width="600">
 
 Now you are hosting server side successfully, this is a server side light project using FastAPI(Python) + LangGraph + LangSmith(Trace).<br>
 
