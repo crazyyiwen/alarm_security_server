@@ -103,6 +103,24 @@ messages = [SystemMessage(content=alarm_security_system_message)] + state["messa
 it’s for add user/delete user/show all users<br>
 <img src="media/ex14.png" width="600"><br>
 
+### Environment Setup:
+<img src="media/ex19.png" width="600"><br>
+
+### Tests, Health check and Logging trace
+```
+pytest -v tests/main_tests.py
+```
+<img src="media/ex15.png" width="600"><br>
+
+```
+Swagger Health Check
+```
+<img src="media/ex18.png" width="600"><br>
+
+```
+Logging trace(LangSmith)
+```
+<img src="media/ex16.png" width="600"><br>
 
 ### Pending work:
 
