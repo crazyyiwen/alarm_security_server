@@ -83,6 +83,7 @@ Case_9: Open door before or after system armed:<br>
 2 But once system armed, only valid user can open the door<br>
 <img src="media/ex9.png" width="600"><br>
 Case_10: Complex words parse:<br>
+<img src="media/ex13.png" width="600"><br>
 <img src="media/ex11.png" width="600"><br>
 <img src="media/ex12.png" width="600"><br>
 
