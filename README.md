@@ -13,7 +13,7 @@
 [LangGraph](https://www.langchain.com/langgraph)<br>
 [LangSmith](https://smith.langchain.com/)<br>
 [React](https://react.dev/)<br>
-[React](https://vite.dev/guide/)<br>
+[Vite React](https://vite.dev/guide/)<br>
 
 ### Quick start:
 ```
