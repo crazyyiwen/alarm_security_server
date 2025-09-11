@@ -108,21 +108,21 @@ it’s for add user/delete user/show all users<br>
 
 1. ASR (Speech-to-Text)<br>
 
-Transcribes audio into text<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;Transcribes audio into text<br>
 
-Examples: Whisper (OpenAI), DeepSpeech (Mozilla), wav2vec 2.0 (Meta)<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;Examples: Whisper (OpenAI), DeepSpeech (Mozilla), wav2vec 2.0 (Meta)<br>
 
 2. LLM (Reasoning Layer)
 
-Takes the text as input, processes it, and generates a response<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;Takes the text as input, processes it, and generates a response<br>
 
 Example: GPT-4o, LLaMA-3, Claude, Mistral<br>
 
 3. TTS (Text-to-Speech)<br>
 
-Converts LLM’s output back into natural-sounding speech<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;Converts LLM’s output back into natural-sounding speech<br>
 
-Examples: Tacotron, FastSpeech, VALL-E, OpenAI TTS models<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;Examples: Tacotron, FastSpeech, VALL-E, OpenAI TTS models<br>
 
 Now you are hosting server side successfully, this is a server side light project using FastAPI(Python) + LangGraph + LangSmith(Trace).<br>
 
