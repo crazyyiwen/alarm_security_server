@@ -8,7 +8,7 @@
 
 ## Get started
 
-Quick start:<br>
+### Quick start
 ```
 docker pull crazyyiwen/alarm-server:latest
 docker run -d -p 8000:8000 --name alarm-server crazyyiwen/alarm-server:latest
