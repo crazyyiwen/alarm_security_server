@@ -8,7 +8,7 @@
 
 ## Get started
 
-### Quick start
+### Quick start:
 ```
 docker pull crazyyiwen/alarm-server:latest
 docker run -d -p 8000:8000 --name alarm-server crazyyiwen/alarm-server:latest
@@ -28,11 +28,11 @@ docker build -t alarm-server .
 docker run -d -p 8000:8000 --name alarm-server alarm-server
 ```
 
-### Architecture Diagram
+### Architecture Diagram:
 <img src="media/Alarm_work_flow.png" width="600">
 
 
-### Code Structure
+### Code Structure:
 <img src="media/Alarm_code_structure.png" width="600">
 
 ### Strategy:
@@ -57,7 +57,7 @@ docker run -d -p 8000:8000 --name alarm-server alarm-server
 1.  LLM will check if system armed, username, password, expiration time range fetching.
 1.  LLM will check how many times password input failure, if multiple times failed, user will be locked.
 
-### Examples
+### Examples:
 Note: 
 For “Arm system“/”Disarm System”/”Door operation(open door)”, 
 please use cmd like “I am …, please…“, this is to mock the voice differentiate the Admin user or client user(LLM will parse the exact value from message).<br>
@@ -87,7 +87,7 @@ Case_10: Complex words parse:<br>
 <img src="media/ex11.png" width="600"><br>
 <img src="media/ex12.png" width="600"><br>
 
-### Memory Use
+### Memory Use:
 1 For user message, I am using in-memory, which is convenient. However, in a production application, you would likely change this to use SqlSaver or PostgresSaver and connect a database.<br>
 LLM will check if system armed, username, password, expiration time range fetching.<br>
 LLM will check how many times password input failure, if multiple times failed, user will be locked.<br>
@@ -102,6 +102,27 @@ messages = [SystemMessage(content=alarm_security_system_message)] + state["messa
 2 For user list, I am using json file as the mock of database,
 it’s for add user/delete user/show all users<br>
 <img src="media/ex14.png" width="600"><br>
+
+
+### Pending work:
+
+1. ASR (Speech-to-Text)<br>
+
+Transcribes audio into text<br>
+
+Examples: Whisper (OpenAI), DeepSpeech (Mozilla), wav2vec 2.0 (Meta)<br>
+
+2. LLM (Reasoning Layer)
+
+Takes the text as input, processes it, and generates a response<br>
+
+Example: GPT-4o, LLaMA-3, Claude, Mistral<br>
+
+3. TTS (Text-to-Speech)<br>
+
+Converts LLM’s output back into natural-sounding speech<br>
+
+Examples: Tacotron, FastSpeech, VALL-E, OpenAI TTS models<br>
 
 Now you are hosting server side successfully, this is a server side light project using FastAPI(Python) + LangGraph + LangSmith(Trace).<br>
 
