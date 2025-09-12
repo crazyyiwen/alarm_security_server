@@ -41,7 +41,7 @@ docker run -d -p 8000:8000 --name alarm-server alarm-server
 ```
 
 ### Architecture Diagram:
-<img src="media/Alarm_work_flow.png" width="1000">
+<img src="media/Alarm_work_flow.png" width="1500">
 
 
 ### Code Structure:
