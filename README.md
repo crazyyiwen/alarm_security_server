@@ -154,5 +154,8 @@ Logging trace(LangSmith)
 
     &nbsp;&nbsp;&nbsp;&nbsp;Examples: Tacotron, FastSpeech, VALL-E, OpenAI TTS models<br>
 
+### New UI:
+<img src="media/ex21.png" width="600"><br>
+
 Now you are hosting server side successfully<br>
 
