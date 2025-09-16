@@ -94,10 +94,11 @@ Case_9: Open door before or after system armed:<br>
 1 Before system armed, anyone can open the door<br>
 2 But once system armed, only valid user can open the door<br>
 <img src="media/ex9.png" width="600"><br>
-Case_10: Complex words parse:<br>
-<img src="media/ex13.png" width="600"><br>
-<img src="media/ex11.png" width="600"><br>
-<img src="media/ex12.png" width="600"><br>
+Case_10: Complex words parse(Username, password and time range):<br>
+Feeding current ISO time to system prompt.
+<img src="media/Time_feeding_prompt_2.png" width="600"><br>
+<img src="media/Time_feeding_prompt_3.png" width="600"><br>
+<img src="media/Time_feeding_prompt.png" width="600"><br>
 
 ### Memory Use:
 1 For user message, I am using in-memory, which is convenient. However, in a production application, you would likely change this to use SqlSaver or PostgresSaver and connect a database.<br>
