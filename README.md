@@ -132,7 +132,7 @@ Swagger Health Check
 ```
 Logging trace(LangSmith)
 ```
-<img src="media/ex16.png" width="600"><br>
+<img src="media/ex25.png" width="600"><br>
 
 ### Pending work:
 
