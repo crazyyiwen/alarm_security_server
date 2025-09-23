@@ -1,38 +1,47 @@
 import os
-from typing import List, TypedDict
-import uuid
+from typing import Annotated, List, TypedDict
 from langchain_openai import ChatOpenAI
-from langgraph.graph import StateGraph, END
+from langgraph.graph import StateGraph, START, END
 from langchain_core.tools import StructuredTool
 from langchain_core.messages import SystemMessage, AIMessage
-from langchain_core.messages import BaseMessage
-from langchain_core.tracers import ConsoleCallbackHandler
+from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.prebuilt import create_react_agent
+from langchain.chat_models import init_chat_model
+from langgraph.graph.message import add_messages
 
-from prompts.system_prompts import alarm_security_system_message
+from prompts.system_prompts import alarm_security_system_init_message, alarm_security_system_router_message, alarm_security_system_pwd_message
 from system_setup.env_setup import set_env
 from tools_call_all.tools_call import add_user, arm_system, default_tool, disarm_system, door_operations, list_user, remove_user
+import uuid
 
-
+# ------- uuid ------------------------
 uid_str = str(uuid.uuid4())
+
 
 # ------- Enable memory ---------------
 class AgentState(TypedDict):
-    messages: List[BaseMessage]
-    result: str  
+    messages: Annotated[list, add_messages]
+    result: str 
 
+
+
+checkpointer = InMemorySaver()
+config = {"configurable": {"thread_id": uid_str}}
+workflow = StateGraph(AgentState)
 
 set_env()
 
 # ---- Bind Tools to LLM ----
 tools = [arm_system, disarm_system, add_user, remove_user, list_user, door_operations, default_tool]
-llm = ChatOpenAI(model="gpt-4o", callbacks=[ConsoleCallbackHandler()]).bind_tools(tools)
+llm = init_chat_model("openai:gpt-4.1")
+llm_with_tools = llm.bind_tools(tools)
 
 # ---- Router Node ----
 def router(state: AgentState):
     """LLM decides which tool to call and executes it."""
-    messages = [SystemMessage(content=alarm_security_system_message)] + state["messages"]
+    messages = [SystemMessage(content=alarm_security_system_router_message)] + state["messages"]
 
-    response = llm.invoke(messages)
+    response = llm_with_tools.invoke(messages, config)
     if response.tool_calls:
         tool_call = response.tool_calls[0]  # dict with tool info
         tool_name = tool_call["name"]
@@ -44,16 +53,61 @@ def router(state: AgentState):
         if tool_name in tool_map:
             tool: StructuredTool = tool_map[tool_name]
             result = tool.invoke(tool_args)
-            new_messages = state["messages"] + [AIMessage(content=result)]
-            return {"messages": new_messages, "result": result}
+            return {"messages": [AIMessage(content=result)], "result": result}
 
     return {"result": "No valid tool selected."}
 
+# ---- Normal Chat Node ----
+def normal_chat(state: AgentState):
+    """Mormal chat."""
+    messages = state["messages"]
+    response = llm_with_tools.invoke(messages, config)
+    return {"messages": [AIMessage(content=response.content)], "result": response.content}
+
+# ---- Operation Node ----
+def operation(state: AgentState):
+    """Users do operation."""
+    messages = state["messages"]
+    return {"messages": [AIMessage(content="operation")], "result": messages[0].content}
+
+# ---- Operation Node ----
+def evaluator(state: AgentState):
+    """Evaluate the pwd."""
+    messages = [SystemMessage(content=alarm_security_system_pwd_message)] + state["messages"]
+    response = llm_with_tools.invoke(messages, config)
+    return {"messages": [AIMessage(content=response.content)], "result": response.content}
+
+# ---- Init Node ----
+def init(state: AgentState):
+    """LLM decides normal char， routing operation."""
+    messages = [SystemMessage(content=alarm_security_system_init_message)] + state["messages"]
+    response = llm_with_tools.invoke(messages, config)
+    return {"result": response.content}
+
+# ---- Gateway Node(Reusable node) ----
+def gateway(state: AgentState):
+    """Conditional check."""
+    return state["result"]
+
 # ---- Build Graph ----
-workflow = StateGraph(AgentState)
+workflow.add_edge(START, "init")
+workflow.add_conditional_edges("init", gateway, {"normal_chat": "normal_chat", "router": "router", "operation":"operation"})
+workflow.add_node("init", init)
 workflow.add_node("router", router)
+workflow.add_node("normal_chat", normal_chat)
+workflow.add_node("operation", operation)
+workflow.add_node("evaluator", evaluator)
+workflow.add_edge("operation", "evaluator")
+workflow.add_conditional_edges("evaluator", 
+    gateway,
+    {
+        "accepted": END,
+        "retry": END,
+        "rejected": END
+    })
+workflow.add_edge("normal_chat", END)
 workflow.add_edge("router", END)
-workflow.set_entry_point("router")
+
 
 # ---- Compile ----
-app_graph = workflow.compile()
+app_graph = workflow.compile(checkpointer=checkpointer)
