@@ -1,5 +1,6 @@
 import os
 from typing import List, TypedDict
+import uuid
 from langchain_openai import ChatOpenAI
 from langgraph.graph import StateGraph, END
 from langchain_core.tools import StructuredTool
@@ -10,6 +11,9 @@ from langchain_core.tracers import ConsoleCallbackHandler
 from prompts.system_prompts import alarm_security_system_message
 from system_setup.env_setup import set_env
 from tools_call_all.tools_call import add_user, arm_system, default_tool, disarm_system, door_operations, list_user, remove_user
+
+
+uid_str = str(uuid.uuid4())
 
 # ------- Enable memory ---------------
 class AgentState(TypedDict):
