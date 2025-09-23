@@ -7,6 +7,7 @@ import requests
 # ------------------ Memory ------------------
 system_enabled = False
 local_base_url = "http://localhost:8000/"
+register_url = "http://localhost:5218/"
 
 # ------------------ Tool functions ------------------
 
@@ -64,6 +65,20 @@ def add_user(username: str, password: str, expire_from: str, expire_to: str) -> 
         return f"Failed to parse input: {e}"
 
     try:
+        res = requests.post(
+            f"{register_url}api/Users/AddUser",  # same server
+            json=
+            {
+                "id": 0,
+                "name": username,
+                "password": password,
+                "start_time": expire_from,
+                "end_time": expire_to,
+                "isadminuser": False,
+                "permissions": '["arm","disarm"]'
+            }
+        )
+        st = res.raise_for_status()
         response = requests.post(
             f"{local_base_url}api/add_user",  # same server
             json={
