@@ -1,13 +1,14 @@
 from datetime import datetime
 from typing import Dict
 from fastapi import APIRouter, HTTPException
+import requests
 
 from langchain_core.messages import HumanMessage
 
 from models.request_models import AddUserRequest, ArmRequest, DisarmRequest, DoorOperationRequest, QueryRequest, RemoveUserRequest
 from models.state_models import AgentState
 from services.crud_service import add_user_process, delete_user_process, load_all_users, user_exist_check
-from services.llm_build_service import app_graph
+from services.llm_build_service import app_graph, uid_str
 
 api_router = APIRouter()
 
@@ -94,10 +95,28 @@ def query_agent(request: QueryRequest):
     try:
         session_id = getattr(request, "session_id", "default")
         state = chat_sessions.get(session_id, {"messages": [], "result": ""})
+        config = {"configurable": {"thread_id": uid_str}}
         state["messages"].append(HumanMessage(content=request.user_input))
-        result = app_graph.invoke(state)
+        result = app_graph.invoke(state, config)
         chat_sessions[session_id] = result
 
+        # local_base_url = "http://localhost:8000/"
+        # response_1 = requests.get(
+        #     f"{local_base_url}api/get_current_state_by_thread_id?thread_id={uid_str}",  # same server
+        # )
+
+        # response_2 = requests.get(
+        #     f"{local_base_url}api/get_chat_history_thread_id?thread_id={uid_str}",  # same server
+        # )
+
+        # response_3 = requests.post(
+        #     f"{local_base_url}api/update_state_by_checkpoint_id?thread_id={uid_str}",  # same server
+        # )
+
+        # response_4 = requests.get(
+        #     f"{local_base_url}api/get_current_state_by_thread_id?thread_id={uid_str}",  # same server
+        # )
+        
         return {
             "reply": result["result"],
             "history": [m.content for m in result["messages"]],
