@@ -12,3 +12,5 @@ pytest-asyncio
 httpx
 langsmith
 tzdata
+psycopg2-binary
+asyncpg

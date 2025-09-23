@@ -10,6 +10,7 @@ from langchain.chat_models import init_chat_model
 from langgraph.graph.message import add_messages
 
 from prompts.system_prompts import alarm_security_system_init_message, alarm_security_system_router_message, alarm_security_system_pwd_message
+from services.db_services.db_chat_service import load_history, save_message
 from system_setup.env_setup import set_env
 from tools_call_all.tools_call import add_user, arm_system, default_tool, disarm_system, door_operations, list_user, remove_user
 import uuid
@@ -89,6 +90,12 @@ def gateway(state: AgentState):
     """Conditional check."""
     return state["result"]
 
+def saving_point(state: AgentState):
+    """Saving chat in db"""
+    save_message(uid_str, {"messages": str(state["messages"])})
+    # chat_history = load_history(uid_str)
+    return
+
 # ---- Build Graph ----
 workflow.add_edge(START, "init")
 workflow.add_conditional_edges("init", gateway, {"normal_chat": "normal_chat", "router": "router", "operation":"operation"})
@@ -97,6 +104,7 @@ workflow.add_node("router", router)
 workflow.add_node("normal_chat", normal_chat)
 workflow.add_node("operation", operation)
 workflow.add_node("evaluator", evaluator)
+workflow.add_node("saving_point", saving_point)
 workflow.add_edge("operation", "evaluator")
 workflow.add_conditional_edges("evaluator", 
     gateway,
@@ -105,7 +113,8 @@ workflow.add_conditional_edges("evaluator",
         "retry": END,
         "rejected": END
     })
-workflow.add_edge("normal_chat", END)
+workflow.add_edge("normal_chat", "saving_point")
+workflow.add_edge("saving_point", END)
 workflow.add_edge("router", END)
 
 

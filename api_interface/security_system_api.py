@@ -99,24 +99,6 @@ def query_agent(request: QueryRequest):
         state["messages"].append(HumanMessage(content=request.user_input))
         result = app_graph.invoke(state, config)
         chat_sessions[session_id] = result
-
-        # local_base_url = "http://localhost:8000/"
-        # response_1 = requests.get(
-        #     f"{local_base_url}api/get_current_state_by_thread_id?thread_id={uid_str}",  # same server
-        # )
-
-        # response_2 = requests.get(
-        #     f"{local_base_url}api/get_chat_history_thread_id?thread_id={uid_str}",  # same server
-        # )
-
-        # response_3 = requests.post(
-        #     f"{local_base_url}api/update_state_by_checkpoint_id?thread_id={uid_str}",  # same server
-        # )
-
-        # response_4 = requests.get(
-        #     f"{local_base_url}api/get_current_state_by_thread_id?thread_id={uid_str}",  # same server
-        # )
-        
         return {
             "reply": result["result"],
             "history": [m.content for m in result["messages"]],
