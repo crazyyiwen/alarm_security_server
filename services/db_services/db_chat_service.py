@@ -1,46 +1,42 @@
 import json
-import psycopg2
-from psycopg2.extras import RealDictCursor
-import os
+import asyncpg
+from fastapi import Request
 
-from system_setup.db_connect import get_connection
-
-def save_message(thread_id: str, content: dict):
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute(
-        "select thread_id from chat_history where thread_id = %s",
-        (str(thread_id),)
-    )
-    existing = cur.fetchone()
-    if existing:
-        cur.execute(
+async def save_message(thread_id: str, content: dict, request: Request = None):
+    pool: asyncpg.Pool = request.app.state.pool
+    async with pool.acquire() as conn:
+        knowledge = await conn.fetchrow(
             """
-            update chat_history set message = %s where thread_id = %s
+            select thread_id from chat_history where thread_id = $1
             """,
-            (json.dumps(content), thread_id)
+            thread_id
         )
-    else:
-        cur.execute(
-            """
-            INSERT INTO chat_history (thread_id, message)
-            VALUES (%s, %s)
-            """,
-            (thread_id, json.dumps(content))
-        )
-    conn.commit()
-    cur.close()
-    conn.close()
+        if knowledge is not None:
+            await conn.execute(
+                """
+                update chat_history set message = $1 where thread_id = $2
+                """,
+                json.dumps(content),
+                thread_id
+            )
+        else:
+            await conn.execute(
+                """
+                INSERT INTO chat_history (thread_id, message)
+                VALUES ($1, $2)
+                """,
+                thread_id, 
+                json.dumps(content)
+            )
 
-def load_history(thread_id: str):
+async def load_history(thread_id: str, request: Request = None):
     """Load all messages for a thread as JSON."""
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute(
-        "SELECT message FROM chat_history WHERE thread_id = %s ORDER BY created_at",
-        (thread_id)
-    )
-    rows = [row["message"] for row in cur.fetchall()]
-    cur.close()
-    conn.close()
-    return rows
+    pool: asyncpg.Pool = request.app.state.pool
+    async with pool.acquire() as conn:
+        knowledge = await conn.fetchrow(
+            """
+            SELECT message FROM chat_history WHERE thread_id = $1 ORDER BY created_at
+            """,
+            thread_id
+        )
+    return knowledge

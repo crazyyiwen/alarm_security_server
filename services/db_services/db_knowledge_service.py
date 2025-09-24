@@ -1,20 +1,17 @@
 import json
 import asyncpg
 from fastapi import Request
-import psycopg2
-from psycopg2.extras import RealDictCursor
-import os
 
 from models.request_models import KnowledgeRequest
 from system_setup.db_connect import get_connection
 
 async def save_knowledge(payload: KnowledgeRequest, request: Request = None):
     """Save knowledge by knowledge_id as JSON."""
-    pool: asyncpg.Pool = request.app.state.pool   # get pool from FastAPI app
+    pool: asyncpg.Pool = request.app.state.pool
     async with pool.acquire() as conn:
         row = await conn.fetchrow(
             """
-            select knowledge_id from knowledge_factory where knowledge_id = $1
+            SELECT knowledge_id from knowledge_factory WHERE knowledge_id = $1
             """,
             payload.knowledge_id
         )
@@ -42,10 +39,12 @@ async def save_knowledge(payload: KnowledgeRequest, request: Request = None):
 
 async def load_knowledge(knowledge_id: str, request: Request = None):
     """Load knowledge by knowledge_id as JSON."""
-    pool: asyncpg.Pool = request.app.state.pool   # get pool from FastAPI app
+    pool: asyncpg.Pool = request.app.state.pool
     async with pool.acquire() as conn:
         row = await conn.fetchrow(
-            "SELECT context FROM knowledge_factory WHERE knowledge_id = $1",
+            """
+            SELECT context FROM knowledge_factory WHERE knowledge_id = $1
+            """,
             knowledge_id
         )
     return {"knowledge_id": knowledge_id, "context": row["context"]}

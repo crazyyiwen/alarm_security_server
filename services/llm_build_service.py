@@ -1,11 +1,10 @@
 import os
-from typing import Annotated, List, TypedDict
-from langchain_openai import ChatOpenAI
+from typing import Annotated, TypedDict
+import httpx
 from langgraph.graph import StateGraph, START, END
 from langchain_core.tools import StructuredTool
 from langchain_core.messages import SystemMessage, AIMessage
 from langgraph.checkpoint.memory import InMemorySaver
-from langgraph.prebuilt import create_react_agent
 from langchain.chat_models import init_chat_model
 from langgraph.graph.message import add_messages
 
@@ -61,6 +60,12 @@ async def router(state: AgentState):
 # ---- Normal Chat Node ----
 async def normal_chat(state: AgentState):
     """Mormal chat."""
+    # async with httpx.AsyncClient() as server:
+    #     knowledge = await server.get(
+    #         "http://localhost:8000/api/get_knowledge_by_knowledge_id?knowledge_id=tiny_knowledge",  # same server
+    #     )
+    #     test = 0
+    # messages = [SystemMessage(content=str(knowledge.content))] + state["messages"]
     messages = state["messages"]
     response = await llm_with_tools.ainvoke(messages, config)
     return {"messages": [AIMessage(content=response.content)], "result": response.content}
@@ -92,7 +97,6 @@ async def gateway(state: AgentState):
 
 async def saving_point(state: AgentState):
     """Saving chat in db"""
-    save_message(uid_str, {"messages": str(state["messages"])})
     # chat_history = load_history(uid_str)
     return
 

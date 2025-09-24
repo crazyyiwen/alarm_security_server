@@ -9,7 +9,7 @@ api_router = APIRouter()
 
 #---- Get thread ----
 @api_router.get("/api/get_knowledge_by_knowledge_id")
-async def get_checkpoint_by_checkpoint_id(knowledge_id: str = Query(..., description="Thread ID to fetch"), request: Request = None):
+async def get_knowledge_by_knowledge_id(knowledge_id: str = Query(..., description="Thread ID to fetch"), request: Request = None):
     try:
         response = await load_knowledge(knowledge_id, request)
         return response
@@ -19,7 +19,7 @@ async def get_checkpoint_by_checkpoint_id(knowledge_id: str = Query(..., descrip
         raise HTTPException(status_code=500, detail=f"Database error: {e}")
     
 @api_router.post("/api/update_knowledge_by_knowledge_id/")
-async def update_state_by_checkpoint_id(payload: KnowledgeRequest, request: Request = None):
+async def update_knowledge_by_knowledge_id(payload: KnowledgeRequest, request: Request = None):
     try:
         response = await save_knowledge(payload, request)
         return response

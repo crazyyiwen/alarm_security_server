@@ -1,13 +1,14 @@
 from datetime import datetime
 from typing import Dict
-from fastapi import APIRouter, HTTPException
-import requests
+from fastapi import APIRouter, HTTPException, Request
 
 from langchain_core.messages import HumanMessage
 
 from models.request_models import AddUserRequest, ArmRequest, DisarmRequest, DoorOperationRequest, QueryRequest, RemoveUserRequest
 from models.state_models import AgentState
 from services.crud_service import add_user_process, delete_user_process, load_all_users, user_exist_check
+from services.db_services.db_chat_service import load_history, save_message
+from services.db_services.helper_service import parse_chat_history
 from services.llm_build_service import app_graph, uid_str
 
 api_router = APIRouter()
@@ -91,17 +92,19 @@ async def door_operation_api(request: DoorOperationRequest):
     
 #---- Query API for client side ----
 @api_router.post("/chat")
-async def query_agent(request: QueryRequest):
+async def query_agent(payload: QueryRequest, request: Request = None):
     try:
-        session_id = getattr(request, "session_id", "default")
+        session_id = getattr(payload, "session_id", "default")
         state = chat_sessions.get(session_id, {"messages": [], "result": ""})
         config = {"configurable": {"thread_id": uid_str}}
-        state["messages"].append(HumanMessage(content=request.user_input))
+        state["messages"].append(HumanMessage(content=payload.user_input))
         result = await app_graph.ainvoke(state, config)
+        history_chat = [m.content for m in result["messages"]]
         chat_sessions[session_id] = result
+        await save_message(uid_str, {"message":str(result["messages"])}, request)
         return {
             "reply": result["result"],
-            "history": [m.content for m in result["messages"]],
+            "history": history_chat,
         }
 
     except Exception as e:
