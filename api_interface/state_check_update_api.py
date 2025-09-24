@@ -4,18 +4,18 @@ from fastapi import APIRouter, HTTPException, Query
 from langchain_core.messages import HumanMessage
 
 
-from services.llm_build_service import AgentState, app_graph
+from services.llm_build_service import app_graph
 
 api_router = APIRouter()
 
 
 #---- Get thread ----
 @api_router.get("/api/get_current_state_by_thread_id")
-def get_current_state_by_thread_id(thread_id: str = Query(..., description="Thread ID to fetch")):
+async def get_current_state_by_thread_id(thread_id: str = Query(..., description="Thread ID to fetch")):
     try:
         # Build config with thread_id
         config = {"configurable": {"thread_id": thread_id}}
-        thread_data_1 = app_graph.get_state(config)
+        thread_data_1 = await app_graph.aget_state(config)
         return {
             "message": f"Thread state retrieved for thread_id={thread_id}",
             "thread_data": thread_data_1,
@@ -26,11 +26,11 @@ def get_current_state_by_thread_id(thread_id: str = Query(..., description="Thre
         raise HTTPException(status_code=500, detail=str(e))
     
 @api_router.get("/api/get_chat_history_thread_id")
-def get_chat_history_thread_id(thread_id: str = Query(..., description="Thread ID to fetch")):
+async def get_chat_history_thread_id(thread_id: str = Query(..., description="Thread ID to fetch")):
     try:
         # Build config with thread_id
         config = {"configurable": {"thread_id": thread_id}}
-        chat_history = list(app_graph.get_state_history(config))
+        chat_history = list(await app_graph.aget_state_history(config))
         return {
             "message": f"Thread state retrieved for thread_id={thread_id}",
             "thread_data": chat_history,
@@ -42,11 +42,11 @@ def get_chat_history_thread_id(thread_id: str = Query(..., description="Thread I
 
 #---- Get thread ----
 @api_router.get("/api/get_checkpoint_by_checkpoint_id")
-def get_checkpoint_by_checkpoint_id(thread_id: str = Query(..., description="Thread ID to fetch"), checkpoint_id: str = Query(..., description="Checkpoint ID to fetch")):
+async def get_checkpoint_by_checkpoint_id(thread_id: str = Query(..., description="Thread ID to fetch"), checkpoint_id: str = Query(..., description="Checkpoint ID to fetch")):
     try:
         # Build config with thread_id
         config = {"configurable": {"thread_id": thread_id, "checkpoint_id": checkpoint_id}}
-        state_data = app_graph.get_state(config)
+        state_data = await app_graph.aget_state(config)
 
         return {
             "message": f"Thread state retrieved for thread_id={thread_id}, checkpoint_id={checkpoint_id}",
@@ -58,11 +58,11 @@ def get_checkpoint_by_checkpoint_id(thread_id: str = Query(..., description="Thr
         raise HTTPException(status_code=500, detail=str(e))
     
 @api_router.post("/api/update_state_by_checkpoint_id")
-def update_state_by_checkpoint_id(thread_id: str = Query(..., description="Thread ID to fetch")):
+async def update_state_by_checkpoint_id(thread_id: str = Query(..., description="Thread ID to fetch")):
     try:
         config = {"configurable": {"thread_id": thread_id}}
         # One pending issue - not able to update result, lacking reducer
-        app_graph.update_state(
+        await app_graph.aupdate_state(
             config,
             {
                 "messages": [HumanMessage(content="test for update")]

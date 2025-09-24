@@ -38,11 +38,11 @@ llm = init_chat_model("openai:gpt-4.1")
 llm_with_tools = llm.bind_tools(tools)
 
 # ---- Router Node ----
-def router(state: AgentState):
+async def router(state: AgentState):
     """LLM decides which tool to call and executes it."""
     messages = [SystemMessage(content=alarm_security_system_router_message)] + state["messages"]
 
-    response = llm_with_tools.invoke(messages, config)
+    response = await llm_with_tools.ainvoke(messages, config)
     if response.tool_calls:
         tool_call = response.tool_calls[0]  # dict with tool info
         tool_name = tool_call["name"]
@@ -53,44 +53,44 @@ def router(state: AgentState):
 
         if tool_name in tool_map:
             tool: StructuredTool = tool_map[tool_name]
-            result = tool.invoke(tool_args)
+            result = await tool.ainvoke(tool_args)
             return {"messages": [AIMessage(content=result)], "result": result}
 
     return {"result": "No valid tool selected."}
 
 # ---- Normal Chat Node ----
-def normal_chat(state: AgentState):
+async def normal_chat(state: AgentState):
     """Mormal chat."""
     messages = state["messages"]
-    response = llm_with_tools.invoke(messages, config)
+    response = await llm_with_tools.ainvoke(messages, config)
     return {"messages": [AIMessage(content=response.content)], "result": response.content}
 
 # ---- Operation Node ----
-def operation(state: AgentState):
+async def operation(state: AgentState):
     """Users do operation."""
     messages = state["messages"]
     return {"messages": [AIMessage(content="operation")], "result": messages[0].content}
 
 # ---- Operation Node ----
-def evaluator(state: AgentState):
+async def evaluator(state: AgentState):
     """Evaluate the pwd."""
     messages = [SystemMessage(content=alarm_security_system_pwd_message)] + state["messages"]
-    response = llm_with_tools.invoke(messages, config)
+    response = await llm_with_tools.ainvoke(messages, config)
     return {"messages": [AIMessage(content=response.content)], "result": response.content}
 
 # ---- Init Node ----
-def init(state: AgentState):
+async def init(state: AgentState):
     """LLM decides normal char， routing operation."""
     messages = [SystemMessage(content=alarm_security_system_init_message)] + state["messages"]
-    response = llm_with_tools.invoke(messages, config)
+    response = await llm_with_tools.ainvoke(messages, config)
     return {"result": response.content}
 
 # ---- Gateway Node(Reusable node) ----
-def gateway(state: AgentState):
+async def gateway(state: AgentState):
     """Conditional check."""
     return state["result"]
 
-def saving_point(state: AgentState):
+async def saving_point(state: AgentState):
     """Saving chat in db"""
     save_message(uid_str, {"messages": str(state["messages"])})
     # chat_history = load_history(uid_str)

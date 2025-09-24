@@ -3,21 +3,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import os
 
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = os.getenv("DB_PORT", "5432")
-DB_NAME = os.getenv("DB_NAME", "alarm_db")
-DB_USER = os.getenv("DB_USER", "postgres")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "2833869")
-
-def get_connection():
-    return psycopg2.connect(
-        host=DB_HOST,
-        port=DB_PORT,
-        dbname=DB_NAME,
-        user=DB_USER,
-        password=DB_PASSWORD,
-        cursor_factory=RealDictCursor
-    )
+from system_setup.db_connect import get_connection
 
 def save_message(thread_id: str, content: dict):
     conn = get_connection()
