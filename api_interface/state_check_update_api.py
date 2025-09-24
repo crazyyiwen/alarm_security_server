@@ -1,5 +1,3 @@
-from datetime import datetime
-from typing import Dict
 from fastapi import APIRouter, HTTPException, Query
 from langchain_core.messages import HumanMessage
 
@@ -30,7 +28,9 @@ async def get_chat_history_thread_id(thread_id: str = Query(..., description="Th
     try:
         # Build config with thread_id
         config = {"configurable": {"thread_id": thread_id}}
-        chat_history = list(await app_graph.aget_state_history(config))
+        result = [cp async for cp in app_graph.aget_state_history(config)]
+        
+        chat_history = list()
         return {
             "message": f"Thread state retrieved for thread_id={thread_id}",
             "thread_data": chat_history,
