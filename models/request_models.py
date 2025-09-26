@@ -25,3 +25,7 @@ class ArmRequest(BaseModel):
 
 class DisarmRequest(BaseModel):
     username: str
+
+class KnowledgeRequest(BaseModel):
+    knowledge_id: str
+    context: str

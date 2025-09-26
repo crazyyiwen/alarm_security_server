@@ -1,13 +1,15 @@
 from datetime import datetime
 from typing import Dict
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 
 from langchain_core.messages import HumanMessage
 
 from models.request_models import AddUserRequest, ArmRequest, DisarmRequest, DoorOperationRequest, QueryRequest, RemoveUserRequest
 from models.state_models import AgentState
 from services.crud_service import add_user_process, delete_user_process, load_all_users, user_exist_check
-from services.llm_build_service import app_graph
+from services.db_services.db_chat_service import load_history, save_message
+from services.db_services.helper_service import parse_chat_history
+from services.llm_build_service import app_graph, uid_str
 
 api_router = APIRouter()
 
@@ -16,7 +18,7 @@ chat_sessions: Dict[str, AgentState] = {}
 
 #---- Do health check ----
 @api_router.get("/healthcheck")
-def health_check():
+async def health_check():
     time_zone = str(datetime.now())
     return {
         "message": f"Current time zone {time_zone}",
@@ -26,14 +28,14 @@ def health_check():
     
 #---- Arm system ----
 @api_router.post("/api/arm_ayatem")
-def enable_system_api(request: ArmRequest):
+async def enable_system_api(request: ArmRequest):
     if user_exist_check(request.username):
         return {"status": "System Armed"}
     else:
         return {"status": "Arm system failed, user is invalid"}
 #---- Disarm system ----
 @api_router.post("/api/disarm_system")
-def disable_system_api(request: DisarmRequest):
+async def disable_system_api(request: DisarmRequest):
     if user_exist_check(request.username):
         return {"status": "System disarmed"}
     else:
@@ -41,7 +43,7 @@ def disable_system_api(request: DisarmRequest):
 
 #---- Add user API ----
 @api_router.post("/api/add_user")
-def add_user_api(request: AddUserRequest):
+async def add_user_api(request: AddUserRequest):
     users = {}
     users[request.username] = {
         "name": request.username,
@@ -55,7 +57,7 @@ def add_user_api(request: AddUserRequest):
 
 #---- Remove user API ----
 @api_router.post("/api/remove_user")
-def remove_user_api(request: RemoveUserRequest):
+async def remove_user_api(request: RemoveUserRequest):
     is_deleted =delete_user_process(request.username)
     if is_deleted:
         return {"status": f"User {request.username} removed"}
@@ -64,7 +66,7 @@ def remove_user_api(request: RemoveUserRequest):
 
 #---- List all users API ----
 @api_router.get("/api/list_users")
-def list_users_api():
+async def list_users_api():
     valid_users = load_all_users()
     if len(valid_users) != 0:
         usernames = list(valid_users.keys())
@@ -75,7 +77,7 @@ def list_users_api():
 
 #---- Door operation API ----
 @api_router.post("/api/door_operation")
-def door_operation_api(request: DoorOperationRequest):
+async def door_operation_api(request: DoorOperationRequest):
     valid_users = load_all_users()
     if request.try_count >= 2:
         return {"status": "Invalid password - locked"}
@@ -90,17 +92,19 @@ def door_operation_api(request: DoorOperationRequest):
     
 #---- Query API for client side ----
 @api_router.post("/chat")
-def query_agent(request: QueryRequest):
+async def query_agent(payload: QueryRequest, request: Request = None):
     try:
-        session_id = getattr(request, "session_id", "default")
+        session_id = getattr(payload, "session_id", "default")
         state = chat_sessions.get(session_id, {"messages": [], "result": ""})
-        state["messages"].append(HumanMessage(content=request.user_input))
-        result = app_graph.invoke(state)
+        config = {"configurable": {"thread_id": uid_str}}
+        state["messages"].append(HumanMessage(content=payload.user_input))
+        result = await app_graph.ainvoke(state, config)
+        history_chat = [m.content for m in result["messages"]]
         chat_sessions[session_id] = result
-
+        await save_message(uid_str, {"message":str(result["messages"])}, request)
         return {
             "reply": result["result"],
-            "history": [m.content for m in result["messages"]],
+            "history": history_chat,
         }
 
     except Exception as e:
