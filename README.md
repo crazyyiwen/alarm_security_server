@@ -101,20 +101,19 @@ Feeding current ISO time to system prompt.
 <img src="media/Time_feeding_prompt.png" width="600"><br>
 
 ### Memory Use:
-1 For user message, I am using in-memory, which is convenient. However, in a production application, you would likely change this to use SqlSaver or PostgresSaver and connect a database.<br>
+I am using in-memory & MS SQL(User Registration) & Postgres(Chat History), which is convenient. However, in a production application, you would likely change this to use SqlSaver or PostgresSaver and connect a database.<br>
 LLM will check if system armed, username, password, expiration time range fetching.<br>
 LLM will check how many times password input failure, if multiple times failed, user will be locked.<br>
-```
-#partial code
-class AgentState(TypedDict):
-    messages: List[BaseMessage]
-    result: str  
 
-messages = [SystemMessage(content=alarm_security_system_message)] + state["messages"]
-```
-2 For user list, I am using json file as the mock of database,
+1 For user list, I am using json file as the mock of database,
 it’s for add user/delete user/show all users<br>
 <img src="media/ex14.png" width="600"><br>
+
+2 New user is also registered in MS SQL DB.<br>
+<img src="media/registration.png" width="600"><br>
+
+3 CHat history is Postgres DB.<br>
+<img src="media/registration.png" width="600"><br>
 
 ### Environment Setup:
 <img src="media/ex19.png" width="600"><br>
