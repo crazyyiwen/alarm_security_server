@@ -101,7 +101,7 @@ Feeding current ISO time to system prompt.
 <img src="media/Time_feeding_prompt.png" width="600"><br>
 
 ### Memory Use:
-I am using in-memory & MS SQL(User Registration) & Postgres(Chat History), which is convenient. However, in a production application, you would likely change this to use SqlSaver or PostgresSaver and connect a database.<br>
+I am using in-memory & MS SQL(User Registration) & Postgres(Chat History and knowledge) for RAG.<br>
 LLM will check if system armed, username, password, expiration time range fetching.<br>
 LLM will check how many times password input failure, if multiple times failed, user will be locked.<br>
 
@@ -112,8 +112,9 @@ it’s for add user/delete user/show all users<br>
 2 New user is also registered in MS SQL DB.<br>
 <img src="media/registration.png" width="600"><br>
 
-3 CHat history is Postgres DB.<br>
-<img src="media/registration.png" width="600"><br>
+3 Chat historys and knowledge are Postgres DB.<br>
+<img src="media/chat_history.png" width="600"><br>
+<img src="media/knowledge.png" width="600"><br>
 
 ### Environment Setup:
 <img src="media/ex19.png" width="600"><br>
